@@ -161,12 +161,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="fileHandling.h" />
     <ClInclude Include="mergeSortTask.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fileHandling.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mergeSortTask.cpp" />
     <ClCompile Include="pch.cpp">

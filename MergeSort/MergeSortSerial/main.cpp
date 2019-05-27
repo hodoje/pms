@@ -6,7 +6,6 @@
 #include <fstream>
 #include <vector>
 
-#include "fileHandling.h"
 #include "sort.h"
 #include "tbb/tick_count.h"
 
@@ -15,6 +14,8 @@ using namespace tbb;
 
 int main()
 {
+	cout << "Running serial merge sort over random unsorted arrays..." << endl;
+
 	// all the possible chars
 	const char alphanum[] = "0123456789"
 							"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -98,7 +99,7 @@ int main()
 	#pragma region Sort unsorted strings and write results to file
 	fstream sortedFile;
 	sortedFile.open("..//Data//sorted.txt", ios::out | ios::trunc);
-	sortedFile << "******************** SERIAL MERGE SORT *******************" << endl << endl;
+	sortedFile << "******************** SERIAL MERGE SORT TESTING *******************" << endl << endl;
 
 	for (vector<string>::iterator it = unsortedStrings.begin(); it != unsortedStrings.end(); it++) {
 		string str = *it;

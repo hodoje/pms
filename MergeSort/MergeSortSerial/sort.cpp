@@ -70,12 +70,12 @@ void MergeSort(string* arrayToSort) {
 	rightArray[rightArraySize] = '\0';
 
 	// copy elements of the left half of the unsorted array to left array
-	for (int i = 0; i <= leftArraySize - 1; i++) {
+	for (size_t i = 0; i <= leftArraySize - 1; i++) {
 		leftArray[i] = (*arrayToSort)[i];
 	}
 
 	// copy elements of the right half of the unsorted array to right array
-	for (int i = middle; i <= nA - 1; i++) {
+	for (size_t i = middle; i <= nA - 1; i++) {
 		rightArray[i - middle] = (*arrayToSort)[i];
 	}
 

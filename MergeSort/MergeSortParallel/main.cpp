@@ -13,85 +13,42 @@ using namespace std;
 
 int main()
 {
-	// all the possible chars
-	const char alphanum[] = "0123456789"
-							"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-							"abcdefghijklmnopqrstuvwxyz";
+	cout << "Running parallel merge sort over random unsorted arrays..." << endl;
 
-	// vector that will hold all the randomized strings
-	// for which the sorting will be done
-	vector<string> stringList;
+	#pragma region Read the file with unsorted strings and fill a container
+	vector<string> unsortedStrings;
 
-	string firstTest = "";
-	for (int i = 0; i < 10; i++) {
-		firstTest.append(string(1, alphanum[rand() % (sizeof(alphanum) - 1)]));
+	fstream unsortedFile;
+	unsortedFile.open("..//Data//unsorted.txt", ios::in);
+
+	string line;
+	while (getline(unsortedFile, line)) {
+		unsortedStrings.push_back(line);
 	}
-	firstTest.append("\0");
 
-	string secondTest = "";
-	for (int i = 0; i < 100; i++) {
-		secondTest.append(string(1, alphanum[rand() % (sizeof(alphanum) - 1)]));
-	}
-	secondTest.append("\0");
+	unsortedFile.close();
+	#pragma endregion
 
-	string thirdTest = "";
-	for (int i = 0; i < 1000; i++) {
-		thirdTest.append(string(1, alphanum[rand() % (sizeof(alphanum) - 1)]));
-	}
-	thirdTest.append("\0");
+	#pragma region Sort unsorted strings and write results to file
+	fstream sortedFile;
+	sortedFile.open("..//Data//sorted.txt", ios::app);
+	sortedFile << "******************** PARALLEL MERGE SORT TESTING *******************" << endl << endl;
 
-	string fourthTest = "";
-	for (int i = 0; i < 10000; i++) {
-		fourthTest.append(string(1, alphanum[rand() % (sizeof(alphanum) - 1)]));
-	}
-	fourthTest.append("\0");
-
-	string fifthTest = "";
-	for (int i = 0; i < 100000; i++) {
-		fifthTest.append(string(1, alphanum[rand() % (sizeof(alphanum) - 1)]));
-	}
-	fifthTest.append("\0");
-
-	string sixthTest = "";
-	for (int i = 0; i < 1000000; i++) {
-		sixthTest.append(string(1, alphanum[rand() % (sizeof(alphanum) - 1)]));
-	}
-	sixthTest.append("\0");
-
-	stringList.push_back(firstTest);
-	stringList.push_back(secondTest);
-	stringList.push_back(thirdTest);
-	stringList.push_back(fourthTest);
-	stringList.push_back(fifthTest);
-	stringList.push_back(sixthTest);
-
-	fstream startingFile;
-	startingFile.open("..//Data//unsorted.txt", ios::out | ios::trunc);
-
-	for (vector<string>::iterator it = stringList.begin(); it != stringList.end(); it++) {
+	for (vector<string>::iterator it = unsortedStrings.begin(); it != unsortedStrings.end(); it++) {
 		string str = *it;
-		startingFile << *it << endl;
+
+		tick_count start = tick_count::now();
+		MergeSortTask& task = *new(task::allocate_root())MergeSortTask(&str);
+		task::spawn_root_and_wait(task);
+		tick_count end = tick_count::now();
+		double res = (end - start).seconds() * 1000;
+
+		sortedFile << "Array size: " << strlen(str.c_str()) << endl;
+		sortedFile << "Sort execution time: " << res << "ms" << endl;
+		sortedFile << "Sorted array: " << str << endl << endl;
 	}
+	sortedFile << "************************************************************" << endl << endl;
 
-	startingFile.close();
-
-	cout << "---------- PARALLEL MERGE SORT TESTING ----------" << endl;
-	//string arr = "ACB531792";
-	//for (int i = 0; i < 1000000; i++) {
-	//	arr.append("h");
-	//}
-	//arr.append("\0");
-	//cout << endl << "Unsorted array: " << arr << endl;
-	//cout << "--------------------------------------------------" << endl;
-
-	/*tick_count start = tick_count::now();
-	MergeSortTask& task = *new(task::allocate_root())MergeSortTask(&arr);
-	task::spawn_root_and_wait(task);
-	tick_count end = tick_count::now();
-
-	double res = (end - start).seconds() * 1000;
-	cout << endl << "Sorted array: " << arr << endl;
-	cout << "--------------------------------------------------" << endl;
-	cout << "---------- EXECUTION TIME ----------" << endl;
-	cout << endl << "Time: " << res << "ms" << endl;*/
+	sortedFile.close();
+	#pragma endregion
 }

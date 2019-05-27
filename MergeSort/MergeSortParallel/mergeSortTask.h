@@ -14,5 +14,6 @@ class MergeSortTask : public task {
 		~MergeSortTask();
 
 		void merge(string leftArr, string rightArr, string* resultArr);
+		void serialMergeSort(string* arrayToSort);
 		task* execute();
 };
