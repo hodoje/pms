@@ -57,13 +57,15 @@ void MergeSort(string* arrayToSort) {
 	// allocate memory for left array
 	// NOTE: although we specify the size of memory to be allocated, there still will be some memory ahead of allocated memory
 	// that is why we set up the null terminator manually at the end
-	string leftArray = new char[middle];
+	// ANOTHER NOTE: creating string like this creates the string on the stack instead on the heap with new char[middle]
+	// this means the string will be automatically deleted after function finishes executing
+	string leftArray = string(middle, ' ');
 	size_t leftArraySize = middle;
 	leftArray[leftArraySize] = '\0';
 
 	// allocate memory for left array
 	// NOTE: same note from above
-	string rightArray = new char[nA - middle];
+	string rightArray = string(nA - middle, ' ');
 	size_t rightArraySize = nA - middle;
 	rightArray[rightArraySize] = '\0';
 
