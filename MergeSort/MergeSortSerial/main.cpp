@@ -7,7 +7,6 @@
 #include "fileHandling.h"
 #include "sort.h"
 #include "tbb/tick_count.h"
-#include "tbb/task_group.h"
 
 using namespace std;
 using namespace tbb;
@@ -24,9 +23,7 @@ int main()
 	cout << "--------------------------------------------------" << endl;
 
 	tick_count start = tick_count::now();
-	task_group group;
-	group.run([&] {MergeSort(&arr); });
-	group.wait();
+	MergeSort(&arr);
 	tick_count end = tick_count::now();
 
 	double res = (end - start).seconds() * 1000;
