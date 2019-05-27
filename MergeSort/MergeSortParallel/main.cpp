@@ -4,7 +4,7 @@
 #include "pch.h"
 #include <iostream>
 
-#include "sort.h"
+#include "mergeSortTask.h"
 #include "tbb/tick_count.h"
 
 using namespace std;
@@ -21,9 +21,8 @@ int main()
 	cout << "--------------------------------------------------" << endl;
 
 	tick_count start = tick_count::now();
-	task_group group;
-	group.run([&] {MergeSort(&arr); });
-	group.wait();
+	MergeSortTask& task = *new(task::allocate_root())MergeSortTask(&arr);
+	task::spawn_root_and_wait(task);
 	tick_count end = tick_count::now();
 
 	double res = (end - start).seconds() * 1000;

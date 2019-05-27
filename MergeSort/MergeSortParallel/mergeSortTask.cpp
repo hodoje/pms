@@ -1,7 +1,15 @@
 #include "pch.h"
-#include "sort.h"
+#include "mergeSortTask.h"
 
-void Merge(string leftArr, string rightArr, string* resultArr) {
+MergeSortTask::MergeSortTask(string* unsortedArray) {
+	arrayToSort = unsortedArray;
+}
+
+MergeSortTask::~MergeSortTask() {
+
+}
+
+void MergeSortTask::merge(string leftArr, string rightArr, string* resultArr) {
 	// get the size of left array
 	size_t nL = strlen(leftArr.c_str());
 	// get the size of right array
@@ -42,13 +50,14 @@ void Merge(string leftArr, string rightArr, string* resultArr) {
 	}
 }
 
-void MergeSort(string* arrayToSort) {
+// Actually the MergeSort method
+task* MergeSortTask::execute() {
 	// get the size of the complete unsortedArray
 	size_t nA = strlen((*arrayToSort).c_str());
 
 	// if number of elements in an array is 1, the array is already sorted and we go back
 	if (nA == 1) {
-		return;
+		return NULL;
 	}
 
 	// if number of elements of an array is larger than 1, there is another breakdown of the array to be done
@@ -79,19 +88,19 @@ void MergeSort(string* arrayToSort) {
 		rightArray[i - middle] = (*arrayToSort)[i];
 	}
 
-	// THE ONLY DIFFERENCE FROM SERIAL VERSION
-	// recursive call for subarrays but now in tasks
-	// task group contains a list tasks that are executing and it's possible to wait for all of them
-	task_group group;
-	// this expression as the argument of "run" method is a lambda expression, just a syntax that acts as an anonymous function
-	group.run([&] {MergeSort(&leftArray); });
-	group.run([&] {MergeSort(&rightArray); });
-	group.wait();
+	// define tasks for each subarray
+	MergeSortTask& leftTask = *new(allocate_child())MergeSortTask(&leftArray);
+	MergeSortTask& rightTask = *new(allocate_child())MergeSortTask(&rightArray);
 
-	//// after sorts return, merge the two arrays in one
-	//// this does not improve performance at all, in different cases it acts either slightly faster or slightly slower
-	//// would recommend staying with Merge that is not in a task since it's more consistent in execution time
-	//group.run([&] {Merge(leftArray, rightArray, &(*arrayToSort)); });
-	//group.wait();
-	Merge(leftArray, rightArray, &(*arrayToSort));
+	// spawn tasks and wait for them to finish
+	// obavezno pre spawn-ovanja bilo kog potomka. Broj 3 predstavlja 2 zadatka
+	// potomka i dodatni implicitno uveden zadatak za potrebe
+	// metode spawn_and_wait_for_all.
+	set_ref_count(3);
+	spawn(leftTask);
+	spawn_and_wait_for_all(rightTask);
+
+	merge(leftArray, rightArray, &(*arrayToSort));
+
+	return NULL;
 }
