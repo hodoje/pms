@@ -29,13 +29,13 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MergeSortSerial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fileHandling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
