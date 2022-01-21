@@ -63,7 +63,7 @@ void MergeSort(string* arrayToSort) {
 	size_t leftArraySize = middle;
 	leftArray[leftArraySize] = '\0';
 
-	// allocate memory for left array
+	// allocate memory for right array
 	// NOTE: same note from above
 	string rightArray = string(nA - middle, ' ');
 	size_t rightArraySize = nA - middle;
